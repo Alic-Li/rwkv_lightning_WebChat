@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RWKV V7 G1a3 2.9B</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>RWKV V7 G1a3 2.9B</h1>
+        </header>
+        
+        <main>
+            <div id="chat-container">
+                <div id="chat-history"></div>
+            </div>
+            
+            <form id="chat-form">
+                <div class="input-container">
+                    <textarea 
+                        id="user-input" 
+                        placeholder="请输入您的问题..." 
+                        rows="3"
+                    ></textarea>
+                    <div class="button-group">
+                        <button type="button" id="stop-btn" class="stop-btn">⏹</button>
+                        <button type="submit" id="send-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
+    <script src="client.js"></script>
+</body>
+</html>
