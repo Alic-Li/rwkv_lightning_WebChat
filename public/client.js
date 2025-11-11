@@ -3,8 +3,8 @@ class ChatApp {
         this.chatHistory = document.getElementById('chat-history');
         this.abortController = null;
         // 自定义Think块的开始和结束标记
-        this.thinkStartMarker = '<think>';
-        this.thinkEndMarker = '</think>';
+        this.thinkStartMarker = '';
+        this.thinkEndMarker = '';
         this.userScrolled = false; // 标记用户是否手动滚动
         this.setupEventListeners();
     }
@@ -158,8 +158,16 @@ class ChatApp {
                         const content = parsed.choices[0]?.delta?.content || '';
                         
                         if (content) {
+                            // 如果没有thinkStartMarker，直接作为普通文本处理
+                            if (!this.thinkStartMarker) {
+                                accumulatedContent += content;
+                                this.updateContent(botMessageDiv, accumulatedContent, thinkBlockCompleted, thinkBlockElement);
+                                this.autoScroll();
+                                continue;
+                            }
+                            
                             // 检查Think块开始标记
-                            if (content.includes(this.thinkStartMarker) && !inThinkBlock) {
+                            if (this.thinkStartMarker && content.includes(this.thinkStartMarker) && !inThinkBlock) {
                                 inThinkBlock = true;
                                 const parts = content.split(this.thinkStartMarker);
                                 accumulatedContent += parts[0];
@@ -171,7 +179,7 @@ class ChatApp {
                             }
                             
                             // 检查Think块结束标记
-                            if (inThinkBlock && content.includes(this.thinkEndMarker)) {
+                            if (this.thinkEndMarker && inThinkBlock && content.includes(this.thinkEndMarker)) {
                                 inThinkBlock = false;
                                 const parts = content.split(this.thinkEndMarker);
                                 thinkContent += parts[0];
@@ -222,7 +230,6 @@ class ChatApp {
             }
         });
     }
-
     displayThinkContent(botMessageDiv, thinkContent, thinkBlockElement) {
         const contentElement = botMessageDiv.querySelector('.message-content');
         if (contentElement) {
@@ -269,6 +276,14 @@ class ChatApp {
     updateContent(botMessageDiv, content, thinkBlockCompleted, thinkBlockElement) {
         const contentElement = botMessageDiv.querySelector('.message-content');
         if (contentElement) {
+            // 如果没有thinkStartMarker，则将所有内容视为普通文本
+            if (!this.thinkStartMarker) {
+                // 直接更新内容并渲染Markdown，不使用think块
+                contentElement.innerHTML = DOMPurify.sanitize(marked.parse(content));
+                contentElement.classList.remove('collapsed');
+                return;
+            }
+            
             if (thinkBlockCompleted) {
                 // 如果Think块已完成，将内容显示在Think块下方
                 let textContainer = contentElement.querySelector('.text-content');
