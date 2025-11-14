@@ -8,7 +8,7 @@ app.use(express.json());
 
 app.post('/api/chat', async (req, res) => {
   try {
-    const response = await fetch('http://localhost:8000/v3/chat/completions', {
+    const response = await fetch('http://localhost:8000/v4/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -25,7 +25,8 @@ app.post('/api/chat', async (req, res) => {
         alpha_frequency: 0.5,
         alpha_decay: 0.996,
         chunk_size: 8,
-        stream: true
+        stream: true,
+        enable_think: true
       })
     });
 
